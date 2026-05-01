@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <style>
+    body { margin:0; font-family: Arial; background:#f4f6f9; }
+    nav { background:#333; color:#fff; padding:15px; text-align:center; }
+    .container {
+      width:320px; margin:100px auto; padding:20px;
+      background:#fff; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);
+      text-align:center;
+    }
+    input {
+      width:90%; padding:10px; margin:10px 0;
+      border:1px solid #ccc; border-radius:5px;
+    }
+    button {
+      width:100%; padding:10px; background:#28a745; color:#fff;
+      border:none; border-radius:5px; cursor:pointer;
+    }
+    button:hover { background:#218838; }
+    .link { margin-top:10px; display:block; }
+  </style>
+</head>
+
+<body>
+
+<nav>Quiz App - Register</nav>
+
+<div class="container">
+  <h2>Sign Up</h2>
+
+  <input id="username" placeholder="Username">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="register()">Register</button>
+
+  <a class="link" href="index.html">Already have an account? Login</a>
+</div>
+
+<script>
+async function register() {
+  try {
+    const res = await fetch("http://localhost:5000/auth/register", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.message) {
+      alert(data.message);
+      return;
+    }
+
+    alert("Registered successfully! Now login.");
+    window.location.href = "index.html";
+
+  } catch (err) {
+    console.error(err);
+    alert("Registration failed");
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaderboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #f4f6f9;
+    }
+
+    nav {
+      background: #333;
+      padding: 15px;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      width: 80%;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input {
+      padding: 10px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>Leaderboard</nav>
+
+<div class="container">
+  <h2>View Leaderboard</h2>
+
+  <input id="quizId" placeholder="Enter Quiz ID">
+  <button onclick="load()">Load</button>
+
+  <table id="table">
+    <tr>
+      <th>Rank</th>
+      <th>User ID</th>
+      <th>Score</th>
+      <th>%</th>
+    </tr>
+  </table>
+</div>
+
+<script>
+async function load() {
+  const res = await fetch("http://localhost:5000/result/leaderboard/" + quizId.value);
+  const data = await res.json();
+
+  const table = document.getElementById("table");
+
+  data.forEach((r, i) => {
+    table.innerHTML += `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${r.userId}</td>
+        <td>${r.score}</td>
+        <td>${r.percentage.toFixed(2)}%</td>
+      </tr>
+    `;
+  });
+}
+</script>
+
+</body>
+</html>

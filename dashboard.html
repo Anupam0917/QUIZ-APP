@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #f4f6f9;
+    }
+
+    nav {
+      background: #333;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    nav .links a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    nav .links a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      padding: 30px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      width: 250px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .card button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .card button:hover {
+      background: #0056b3;
+    }
+
+    .logout {
+      cursor: pointer;
+      color: #ff4d4d;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <div><strong>Quiz App</strong></div>
+  <div class="links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="create.html">Create</a>
+    <a href="join.html">Join</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <span class="logout" onclick="logout()">Logout</span>
+  </div>
+</nav>
+
+<div class="container">
+  <h2>Welcome 👋</h2>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>Create Quiz</h3>
+      <p>Create a new quiz and share PIN with others</p>
+      <button onclick="go('create.html')">Create</button>
+    </div>
+
+    <div class="card">
+      <h3>Join Quiz</h3>
+      <p>Enter a 6-digit PIN to join a quiz</p>
+      <button onclick="go('join.html')">Join</button>
+    </div>
+
+    <div class="card">
+      <h3>Leaderboard</h3>
+      <p>See top scores and rankings</p>
+      <button onclick="go('leaderboard.html')">View</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function go(page) {
+  window.location = page;
+}
+
+function logout() {
+  localStorage.removeItem("user");
+  window.location = "index.html";
+}
+</script>
+
+</body>
+</html>

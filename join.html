@@ -1,0 +1,12 @@
+<h2>Join Quiz</h2>
+<input id="pin">
+<button onclick="join()">Join</button>
+
+<script>
+async function join() {
+  const res = await fetch("http://localhost:5000/quiz/join/" + pin.value);
+  const quiz = await res.json();
+  localStorage.setItem("quiz", JSON.stringify(quiz));
+  window.location = "quiz.html";
+}
+</script>

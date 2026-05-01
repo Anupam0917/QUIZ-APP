@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #f4f6f9;
+    }
+
+    nav {
+      background: #333;
+      padding: 15px;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      width: 60%;
+      margin: 30px auto;
+    }
+
+    .question {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .options label {
+      display: block;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .options input {
+      margin-right: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>Quiz</nav>
+
+<div class="container" id="quiz"></div>
+
+<div class="container">
+  <button onclick="submit()">Submit Quiz</button>
+</div>
+
+<script>
+const quiz = JSON.parse(localStorage.getItem("quiz"));
+const container = document.getElementById("quiz");
+
+quiz.questions.forEach((q, i) => {
+  let html = `
+    <div class="question">
+      <h3>Q${i + 1}. ${q.question}</h3>
+      <div class="options">
+  `;
+
+  q.options.forEach(opt => {
+    html += `
+      <label>
+        <input type="radio" name="q${i}" value="${opt}">
+        ${opt}
+      </label>
+    `;
+  });
+
+  html += `</div></div>`;
+  container.innerHTML += html;
+});
+
+async function submit() {
+  let answers = [];
+
+  quiz.questions.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    answers.push(selected ? selected.value : "");
+  });
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const res = await fetch("http://localhost:5000/result/submit", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      quizId: quiz._id,
+      userId: user._id,
+      answers
+    })
+  });
+
+  const result = await res.json();
+
+  // store result
+  localStorage.setItem("result", JSON.stringify(result));
+
+  // redirect
+  window.location = "result.html";
+}
+</script>
+
+</body>
+</html>

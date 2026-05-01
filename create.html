@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Quiz</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #f4f6f9;
+    }
+
+    nav {
+      background: #333;
+      padding: 15px;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      width: 60%;
+      margin: 30px auto;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    input {
+      width: 95%;
+      padding: 10px;
+      margin: 5px 0;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .correct {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>Create Quiz</nav>
+
+<div class="container">
+
+  <div class="card">
+    <h3>Quiz Info</h3>
+    <input id="subject" placeholder="Enter Subject">
+    <input id="count" type="number" placeholder="Number of Questions">
+    <button onclick="generate()">Generate Questions</button>
+  </div>
+
+  <form id="quizForm"></form>
+
+  <button onclick="submitQuiz()">Submit Quiz</button>
+
+</div>
+
+<script>
+function generate() {
+  const count = document.getElementById("count").value;
+  const form = document.getElementById("quizForm");
+  form.innerHTML = "";
+
+  for (let i = 0; i < count; i++) {
+    form.innerHTML += `
+      <div class="card">
+        <h4>Question ${i + 1}</h4>
+
+        <input placeholder="Enter question" id="q${i}">
+
+        <input placeholder="Option 1" id="q${i}o1">
+        <input placeholder="Option 2" id="q${i}o2">
+        <input placeholder="Option 3" id="q${i}o3">
+        <input placeholder="Option 4" id="q${i}o4">
+
+        <div class="correct">
+          Correct Answer:
+          <label><input type="radio" name="c${i}" value="1">1</label>
+          <label><input type="radio" name="c${i}" value="2">2</label>
+          <label><input type="radio" name="c${i}" value="3">3</label>
+          <label><input type="radio" name="c${i}" value="4">4</label>
+        </div>
+      </div>
+    `;
+  }
+}
+
+async function submitQuiz() {
+  const count = document.getElementById("count").value;
+  let questions = [];
+
+  for (let i = 0; i < count; i++) {
+    const q = document.getElementById(`q${i}`).value;
+
+    const options = [
+      document.getElementById(`q${i}o1`).value,
+      document.getElementById(`q${i}o2`).value,
+      document.getElementById(`q${i}o3`).value,
+      document.getElementById(`q${i}o4`).value
+    ];
+
+    const correctIndex = document.querySelector(`input[name="c${i}"]:checked`);
+    if (!correctIndex) {
+      alert("Select correct answer for question " + (i+1));
+      return;
+    }
+
+    const correctAnswer = options[correctIndex.value - 1];
+
+    questions.push({
+      question: q,
+      options,
+      correctAnswer
+    });
+  }
+
+  const res = await fetch("http://localhost:5000/quiz/create", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      subject: document.getElementById("subject").value,
+      questions
+    })
+  });
+
+  const data = await res.json();
+
+  alert("Quiz Created! PIN: " + data.pin);
+  window.location = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
